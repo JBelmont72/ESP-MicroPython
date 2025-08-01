@@ -443,4 +443,6 @@ led = Pin(2, Pin.OUT)
 
 while True:
   led.value(not led.value())
+  val=led.value() 
+  print('hi',val)          
   sleep(0.5)

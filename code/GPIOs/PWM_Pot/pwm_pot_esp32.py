@@ -2,9 +2,10 @@
 
 from machine import Pin, PWM, ADC
 from time import sleep
-
+## setup LED PWM
 frequency = 5000
 led = PWM(Pin(5), frequency)
+## setup Potentiometer on ADC pins
 pot = ADC(Pin(34))
 pot.width(ADC.WIDTH_10BIT)
 pot.atten(ADC.ATTN_11DB)
