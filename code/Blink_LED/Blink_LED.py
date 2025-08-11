@@ -436,13 +436,124 @@ GitHub Copilot: If PyMakr is installed but you do not see the toolbar:
 If the toolbar still does not appear, let me know what you see in the "PyMakr" output panel.
 '''
 
+# from machine import Pin
+# from time import sleep
+# import sys
+
+# led = Pin(2, Pin.OUT)
+# try:
+#    while True:
+#       led.value(not led.value())
+#       val=led.value() 
+#       print('hi',val)          
+#       sleep(0.5)
+# except KeyboardInterrupt:
+#    led.value(0)
+#    print('signing off')
+#    sys.exit()
+# from machine import Pin
+# from time import sleep
+
+# led = Pin(2, Pin.OUT)
+
+# while True:
+#   led.value(not led.value())
+#   val=led.value() 
+#   print('hi',val)          
+#   sleep(0.5)
+
+## make into a function that can be called from the mainpy
+from machine import Pin
+from time import sleep
+import sys
+
+led = Pin(2, Pin.OUT)
+def main():
+   try:
+      while True:
+         led.value(not led.value())
+         val=led.value() 
+         print('hi',val)          
+         sleep(0.5)
+   except KeyboardInterrupt:
+      led.value(0)
+      print('signing off')
+      sys.exit()
+if __name__=='__main__':
+   main()
+## BELOW IS THE COMPLETE SETUP WITH THE MAIN.PY THAT WORKS WITH THE Blink_LED.main()
+'''
+Blink_LED.Blink_LED()
+
+'''
+from machine import Pin
+from time import sleep
+import sys
+
+led = Pin(2, Pin.OUT)
+try:
+   while True:
+      led.value(not led.value())
+      val=led.value() 
+      print('hi',val)          
+      sleep(0.5)
+except KeyboardInterrupt:
+   led.value(0)
+   print('Stopped Blinking')
+   sys.exit()
+   
+'''
+#Blink_LED.py  
 from machine import Pin
 from time import sleep
 
 led = Pin(2, Pin.OUT)
 
-while True:
-  led.value(not led.value())
-  val=led.value() 
-  print('hi',val)          
-  sleep(0.5)
+def Blink_LED():
+    print("Blinking LED. Press Ctrl+C to stop.")
+    try:
+        while True:
+            #led.toggle()  # or: led.value(not led.value())
+            led.value(not led.value())
+            sleep(0.5)
+    except KeyboardInterrupt:
+        print("Stopped blinking.")
+'''
+'''
+# this main.py works with this Blink_LED.py
+# main.py using button press on GPIO 4  
+
+from machine import Pin
+from time import sleep, ticks_ms, ticks_diff
+import sys
+import Blink_LED
+
+# Configuration 
+BUTTON_PIN = 4 #  to GROUND SO Pin.PULL_UP =1 when not pressed
+TIMEOUT_MS = 1000  # 1 second
+
+# Setup
+button = Pin(BUTTON_PIN, Pin.IN, Pin.PULL_UP)
+ON_BOARD_PIN = 2
+led_pin = Pin(ON_BOARD_PIN, Pin.OUT)
+
+butVal=button.value()
+print(f'butVal: {butVal}')
+# Startup message
+print("Waiting for button press...")
+i=0
+start = ticks_ms()
+while ticks_diff(ticks_ms(), start) < TIMEOUT_MS:
+    if not button.value():  # Active-low: pressed
+        print("Button pressed — running Blink_LED")
+        Blink_LED.main()
+        for i in range(0,5,1):
+            led_pin.value(not led_pin.value())
+            sleep_ms(400)
+            
+        break
+    sleep(0.05)
+
+print("No button press — exiting safely")
+sys.exit()
+'''
